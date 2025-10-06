@@ -22,8 +22,10 @@ $new_text = preg_replace($pattern, $replacement,$text);
 echo $new_text;//output: i like banana pie
 
 echo '<br>';
+
 $pattern = '/go?d/'; // Cocokkan "gd" atau "god" (huruf 'o' muncul 0 atau 1 kali)
 $text = 'good god gd.';
+
 if (preg_match($pattern, $text, $matches)) {
     echo "Cocokkan: " . $matches[0];
 } else {
