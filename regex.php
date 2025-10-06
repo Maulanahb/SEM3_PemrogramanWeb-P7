@@ -22,11 +22,12 @@ $new_text = preg_replace($pattern, $replacement,$text);
 echo $new_text;//output: i like banana pie
 
 echo '<br>';
-$pattern = 'go?d';
-$text ='good god gd';
+$pattern = '/go*d/'; // Cocokkan "god", "good", "gooood", dll
+$text = 'god is good.';
+
 if (preg_match($pattern, $text, $matches)) {
     echo "Cocokkan: " . $matches[0];
-}else{
-    echo "Tidak ada angka.";
+} else {
+    echo "Tidak ada yang cocok!";
 }
 ?>
