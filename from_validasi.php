@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Form Input dengan Validasi</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Form Input dengan Validasi (AJAX)</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
 </head>
 <body>
-    <h1>Form Input dengan Validasi</h1>
+    <h1>Form Input dengan Validasi (AJAX)</h1>
     <form id="myForm" method="post" action="proses_validasi.php">
         <label for="nama">Nama: </label>
         <input type="text" id="nama" name="nama">
@@ -18,36 +17,55 @@
         
         <input type="submit" value="Submit">
     </form>
+    
+    <div id="server-response" style="margin-top: 15px; padding: 10px; border: 1px solid #ccc;">
+        Hasil Server akan muncul di sini.
+    </div>
 
     <script>
         $(document).ready(function() {
             $("#myForm").submit(function(event) {
-                // Ambil nilai input
+                event.preventDefault(); // Mencegah pengiriman form biasa
+                
+                // --- Validasi Sisi Klien (Client-Side Validation) ---
                 var nama = $("#nama").val();
                 var email = $("#email").val();
-                var valid = true; // Status validasi awal
-
+                var valid = true; 
+                
+                $("#nama-error").text("");
+                $("#email-error").text("");
+                
                 // 1. Validasi Nama
-                if (nama == "") {
+                if (nama === "") {
                     $("#nama-error").text("Nama harus diisi.");
                     valid = false;
-                } else {
-                    $("#nama-error").text("");
                 }
-
-                // 2. Validasi Email (hanya cek kosong)
-                if (email == "") {
+                
+                // 2. Validasi Email (Hanya cek kosong)
+                if (email === "") {
                     $("#email-error").text("Email harus diisi.");
                     valid = false;
+                }
+                
+                // --- Pemrosesan AJAX (Hanya jika Validasi Klien Berhasil) ---
+                if (valid) {
+                    var formData = $(this).serialize(); // Mengumpulkan semua data form
+                    
+                    $.ajax({
+                        url: "proses_validasi.php", // Ganti sesuai file PHP Anda
+                        type: "POST",
+                        data: formData,
+                        success: function(response) {
+                            // Tampilkan hasil (pesan error atau sukses) dari server
+                            $("#server-response").html(response);
+                        },
+                        error: function() {
+                            $("#server-response").html("<span style='color: red;'>Terjadi kesalahan pada server.</span>");
+                        }
+                    });
                 } else {
-                    $("#email-error").text("");
+                    $("#server-response").html("Validasi klien gagal, form tidak dikirim.");
                 }
-
-                // Jika validasi gagal, hentikan pengiriman form
-                if (!valid) {
-                    event.preventDefault(); // Menghentikan pengiriman form jika validasi gagal
-                }
-
             });
         });
     </script>
